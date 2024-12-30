@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>‎</title>
+    <link rel="icon" href="imagenes/logo.ico" type="image/x-icon">  
+    <!-- Importar la librería de confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --rosaclaro: #ffefef;
+            --rosaoscuro: #ff4081;
+            --rosaoscurohover: #ff3075;
+            --fuente: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--rosaclaro);
+            font-family: var(--fuente);
+            overflow: hidden;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            max-width: 90%;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--rosaoscuro);
+            margin-bottom: 2.5rem;
+            animation: slideDown 1s ease-out;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+            height: 100px;
+        }
+
+        button {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.6rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            color: white;
+            min-width: 140px;
+            position: relative;
+        }
+
+        /* Botones del mismo color */
+        #si, #no {
+            background-color: var(--rosaoscuro);
+
+        }
+
+        #si:hover, #no:hover {
+            background-color: var(--rosaoscurohover);
+            transform: scale(1.05);
+        }
+
+        /* Transiciones adicionales para el botón "No" */
+        #no {
+            transition: transform 0.2s, background-color 0.3s, left 0.5s, top 0.5s;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mensaje de agradecimiento */
+        .thank-you {
+            display: none;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .thank-you h1 {
+            font-size: 3rem;
+            color: var(--rosaoscuro);
+            margin-bottom: 2rem;
+        }
+
+        /* Responsividad */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            button {
+                padding: 0.9rem 2rem;
+                font-size: 1.1rem;
+                min-width: 110px;
+            }
+
+            .buttons {
+                gap: 1rem;
+                height: 80px;
+            }
+
+            .thank-you h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-content">
+        <h1>hola èlia em perdones? pls</h1>
+        <div class="buttons">
+            <button id="si">Sí</button>
+            <button id="no">No</button>
+        </div>
+    </div>
+
+    <div class="thank-you" id="thank-you">
+        <h1>jejej gracies t'estimo 🎉</h1>
+    </div>
+
+    <script>
+        const noButton = document.getElementById('no');
+        const siButton = document.getElementById('si');
+        const mainContent = document.getElementById('main-content');
+        const thankYou = document.getElementById('thank-you');
+
+        let noClickCount = 0;
+        const minSize = 0.3; // Tamaño mínimo (30% del original)
+        const shrinkFactor = 0.85; // Reducir al 85% cada clic
+        const moveThreshold = 0.7; // Cuando el tamaño es 70% o menos
+        const moveDistance = 150; // Distancia mínima para mover
+
+        noButton.addEventListener('click', () => {
+            noClickCount++;
+            const currentScale = noButton.style.transform
+                ? parseFloat(noButton.style.transform.replace('scale(', '').replace(')', ''))
+                : 1;
+            const newScale = currentScale * shrinkFactor;
+
+            if (newScale > minSize) {
+                noButton.style.transform = `scale(${newScale})`;
+
+                // Si el nuevo tamaño es igual o menor al umbral, mover el botón
+                if (newScale <= moveThreshold) {
+                    moveButtonRandomly();
+                }
+            } else {
+                noButton.style.display = 'none';
+            }
+        });
+
+        siButton.addEventListener('click', () => {
+            // Ocultar contenido principal
+            mainContent.style.display = 'none';
+
+            // Mostrar mensaje de agradecimiento
+            thankYou.style.display = 'block';
+
+            // Lanzar confeti
+            confetti({
+                particleCount: 300,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        });
+
+        function moveButtonRandomly() {
+            const button = noButton;
+            const padding = 50; // Margen desde los bordes
+            const buttonWidth = button.offsetWidth;
+            const buttonHeight = button.offsetHeight;
+
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            let newLeft, newTop;
+            let attempts = 0;
+            const maxAttempts = 100;
+
+            do {
+                newLeft = Math.floor(Math.random() * (viewportWidth - buttonWidth - padding * 2)) + padding;
+                newTop = Math.floor(Math.random() * (viewportHeight - buttonHeight - padding * 2)) + padding;
+                attempts++;
+            } while (isOverlapping(newLeft, newTop, buttonWidth, buttonHeight) && attempts < maxAttempts);
+
+            // Aplicar las nuevas posiciones
+            button.style.position = 'fixed';
+            button.style.left = `${newLeft}px`;
+            button.style.top = `${newTop}px`;
+        }
+
+        function isOverlapping(left, top, width, height) {
+            const siRect = siButton.getBoundingClientRect();
+            const mainRect = mainContent.getBoundingClientRect();
+            const noRect = {
+                left: left,
+                top: top,
+                right: left + width,
+                bottom: top + height
+            };
+
+            // Verificar con el botón "Sí"
+            if (noRect.right > siRect.left &&
+                noRect.left < siRect.right &&
+                noRect.bottom > siRect.top &&
+                noRect.top < siRect.bottom) {
+                return true;
+            }
+
+            // Verificar con el texto principal
+            if (noRect.right > mainRect.left &&
+                noRect.left < mainRect.right &&
+                noRect.bottom > mainRect.top &&
+                noRect.top < mainRect.bottom) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Actualizar posición al redimensionar la ventana para evitar que el botón "No" quede fuera
+        window.addEventListener('resize', () => {
+            if (noButton.style.display !== 'none' && noButton.style.position === 'fixed') {
+                const buttonWidth = noButton.offsetWidth;
+                const buttonHeight = noButton.offsetHeight;
+                const padding = 50;
+
+                let left = parseInt(noButton.style.left);
+                let top = parseInt(noButton.style.top);
+
+                if (left + buttonWidth + padding > window.innerWidth) {
+                    left = window.innerWidth - buttonWidth - padding;
+                }
+                if (top + buttonHeight + padding > window.innerHeight) {
+                    top = window.innerHeight - buttonHeight - padding;
+                }
+
+                noButton.style.left = `${Math.max(left, padding)}px`;
+                noButton.style.top = `${Math.max(top, padding)}px`;
+            }
+        });
+    </script>
+</body>
+</html>
