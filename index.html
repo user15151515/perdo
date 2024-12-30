@@ -83,6 +83,33 @@
         #no {
             transition: transform 0.2s, background-color 0.3s, left 0.5s, top 0.5s;
         }
+        .main-menu {
+            background-color: var(--rosaoscuro);
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            align-content: center;
+            }
+
+            .home-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  vertical-align: middle;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
 
         /* Animaciones */
         @keyframes fadeIn {
@@ -129,10 +156,26 @@
             .thank-you h1 {
                 font-size: 2rem;
             }
+            .main-menu {
+    padding: 5px 10px;
+  }
+  .home-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+  }
         }
     </style>
 </head>
 <body>
+      <!-- Menú de navegación -->
+  <nav class="main-menu">
+    <div class="menu-content">
+      <a href="https://user15151515.github.io/jjjj/" class="menu-item">
+        <img src="imagenes/casa.png" alt="Inicio" class="home-icon">
+      </a>
+    </div>
+  </nav>
     <div class="container" id="main-content">
         <h1>hola èlia em perdones? pls</h1>
         <div class="buttons">
